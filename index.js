@@ -18,28 +18,18 @@ const invokeAction = async ({action, id, name, email, phone}) => {
 	switch (action) {
 	  case 'list':
 		return await contactsOperations.listContacts();
-	  // break;
-
-	  // case 'list':
-	  // const contactsList = await contactsOperations.listContacts();
-	  // console.table(contactsList)
-	  // break;
 
 	  case 'get':
 		return await contactsOperations.getContactById(id)
-	  // break;
 
 	  case 'add':
 		return await contactsOperations.addContact(name, email, phone)
-		// break;
 
 	  case 'remove':
-		await contactsOperations.removeContact(id)
-		break;
+		return await contactsOperations.removeContact(id)
 
 	  case 'update':
-		await contactsOperations.updateContactById(id, data)
-		break;
+		return await contactsOperations.updateContactById(id, data)
 
 	  default:
 		console.warn('\x1B[31m Unknown action type!');
@@ -50,7 +40,7 @@ const invokeAction = async ({action, id, name, email, phone}) => {
 }
 
 invokeAction(argv)
-  .then(r => console.log(r))
+  .then(data => console.log(data))
   .catch(error => console.log(error))
 
 // invokeAction('list')

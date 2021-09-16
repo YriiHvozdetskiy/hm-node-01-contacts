@@ -15,9 +15,9 @@ const getContactById = async (contactId) => {
   return contact
 }
 
-const addContact = async (data) => {
+const addContact = async (name, email, phone) => {
   const contactsList = await listContacts();
-  const newContact = {...data, id: nanoid()}
+  const newContact = {name, email, phone, id: nanoid()}
   contactsList.push(newContact)
   await fs.writeFile(contactPath, JSON.stringify(contactsList)) // перезаписуєм файл contacts.json новими даними
 
@@ -26,7 +26,7 @@ const addContact = async (data) => {
 
 const removeContact = async (contactId) => {
   const contactsList = await listContacts()
-  const idx = contactsList.findIndex(contact => contact.id === contactId);
+  const idx = contactsList.findIndex(contact => contact.id.toString() === contactId);// приводимо id з contacts.json в строку
   if (idx === -1) return null; // сповіщаєм що такого id нема
 
   contactsList.splice(idx, 1); // можем "мутувати" масив так як перезаписуєм файл

@@ -1,3 +1,17 @@
+## Силки на скріншоти
+
+Получаем и выводим весь список контактов в виде таблицы (console.table)
+[node index.js --action list]( https://ibb.co/gvrHWvh)
+
+Получаем контакт по id 
+[node index.js --action get --id 8 ](https://ibb.co/t4MD244)
+
+Добавялем контакт
+[node index.js --action add --name Mango --email mango@gmail.com --phone 322-22-22](https://ibb.co/JymzqDL)
+
+Удаляем контакт
+[node index.js --action remove --id=5](https://ibb.co/jft9Zg3)
+
 # Домашнее задание 1
 
 ## Шаг 1
@@ -160,3 +174,4 @@ node index.js --action remove --id=3
 - Название функции или метода содержит глагол
 - В коде нет закомментированных участков кода
 - Проект корректно работает в актуальной LTS-версии Node
+

@@ -1,0 +1,27 @@
+{
+  "name": "hm-01-contacts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index",
+    "dev": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YriiHvozdetskiy/hm-node-01-contacts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YriiHvozdetskiy/hm-node-01-contacts/issues"
+  },
+  "homepage": "https://github.com/YriiHvozdetskiy/hm-node-01-contacts#readme",
+  "dependencies": {
+    "commander": "^8.2.0",
+    "nanoid": "^3.1.25"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}

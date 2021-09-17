@@ -1,11 +1,16 @@
 const fs = require('fs/promises');
 const path = require('path');
 const {nanoid} = require('nanoid');
-const contacts = require('./db/contacts.json') // імпортуємо контакти в json фарматі і node сама робе конвертацію
+// const contacts = require('./db/contacts.json') // імпортуємо контакти в json фарматі і node сама робе конвертацію
 
 const contactPath = path.resolve('./db/contacts.json')
 
-const listContacts = async () => contacts;
+// const listContacts = async => contacts;
+
+const listContacts = async () => {
+  const data = await fs.readFile(contactPath,'utf-8');
+  return JSON.parse(data);
+};
 
 const getContactById = async (contactId) => {
   const contactsList = await listContacts(); // отримуєм масив всіх контактів
@@ -35,17 +40,17 @@ const removeContact = async (contactId) => {
   return 'Success remove'
 }
 
-const updateContactById = async (id, data) => {
-  const contactsList = await listContacts();
-  const idx = contactsList.findIndex(contact => contact.id === id)
-  if (idx === -1) return null;
-
-  const updateContact = {...contactsList[idx], ...data};
-  contactsList[idx] = updateContact;  // масиві контактів по індексу, оновлюєм контакт
-  await updateContacts(contactsList); // перезаписуємо contacts.json
-
-  return updateContact;
-}
+// const updateContactById = async (id, data) => {
+//   const contactsList = await listContacts();
+//   const idx = contactsList.findIndex(contact => contact.id === id)
+//   if (idx === -1) return null;
+//
+//   const updateContact = {...contactsList[idx], ...data};
+//   contactsList[idx] = updateContact;  // масиві контактів по індексу, оновлюєм контакт
+//   await updateContacts(contactsList); // перезаписуємо contacts.json
+//
+//   return updateContact;
+// }
 
 // допоміжна ф-ція для оновлення contacts.json
 async function updateContacts(newContacts) {
@@ -57,5 +62,5 @@ module.exports = {
   getContactById,
   removeContact,
   addContact,
-  updateContactById,
+  // updateContactById,
 }

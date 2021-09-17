@@ -28,8 +28,8 @@ const invokeAction = async ({action, id, name, email, phone}) => {
 	  case 'remove':
 		return await contactsOperations.removeContact(id)
 
-	  case 'update':
-		return await contactsOperations.updateContactById(id, data)
+	  // case 'update':
+		// return await contactsOperations.updateContactById(id, data)
 
 	  default:
 		console.warn('\x1B[31m Unknown action type!');
@@ -42,6 +42,11 @@ const invokeAction = async ({action, id, name, email, phone}) => {
 invokeAction(argv)
   .then(data => console.log(data))
   .catch(error => console.log(error))
+
+// node index -a list
+// node index -a get --id 5
+// node index -a add --name Mango --email mango@gmail.com --phone 322-22-22
+// node index -a remove --id=3
 
 // invokeAction('list')
 //   .then(data => console.log(data))

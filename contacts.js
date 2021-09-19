@@ -15,7 +15,7 @@ const listContacts = async () => {
 const getContactById = async (contactId) => {
   const contactsList = await listContacts(); // отримуєм масив всіх контактів
   const contact = contactsList.find(contact => contact.id.toString() === contactId)
-  if (!contact) return null;
+  if (!contact) throw Error('Error search')// викидуєм різні помилки щоб знати де сталася помилка
 
   return contact
 }
@@ -32,7 +32,7 @@ const addContact = async (name, email, phone) => {
 const removeContact = async (contactId) => {
   const contactsList = await listContacts()
   const idx = contactsList.findIndex(contact => contact.id.toString() === contactId);// приводимо id з contacts.json в строку
-  if (idx === -1) return null; // сповіщаєм що такого id нема
+  if (idx === -1)  throw Error('Error remove')
 
   contactsList.splice(idx, 1); // можем "мутувати" масив так як перезаписуєм файл
   await updateContacts(contactsList)

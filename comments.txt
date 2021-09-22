@@ -1,0 +1,170 @@
+========== index =============
+
+const {Command} = require('commander');
+const contactsOperations = require('./contacts');
+
+const program = new Command();
+program
+  .option('-a, --action <type>', 'choose action')
+  .option('-i, --id <type>', 'user id')
+  .option('-n, --name <type>', 'user name')
+  .option('-e, --email <type>', 'user email')
+  .option('-p, --phone <type>', 'user phone');
+
+program.parse(process.argv);
+
+const argv = program.opts();
+
+const invokeAction = async ({action, id, name, email, phone}) => {
+  try {
+	switch (action) {
+	  case 'list':
+		return await contactsOperations.listContacts();
+
+	  case 'get':
+		return await contactsOperations.getContactById(id)
+
+	  case 'add':
+		return await contactsOperations.addContact(name, email, phone)
+
+	  case 'remove':
+		return await contactsOperations.removeContact(id)
+
+	  // case 'update':
+		// return await contactsOperations.updateContactById(id, data)
+
+	  default:
+		console.warn('\x1B[31m Unknown action type!');
+	}
+  } catch (error) {
+	throw  error
+  }
+}
+
+invokeAction(argv)
+  .then(data => console.log(data))
+  .catch(error => console.log(error))
+
+// node index -a list
+// node index -a get --id 5
+// node index -a add --name Mango --email mango@gmail.com --phone 322-22-22
+// node index -a remove --id=3
+
+// invokeAction('list')
+//   .then(data => console.log(data))
+//   .catch(error => console.log(error))
+
+// const id = 5;
+//
+// invokeAction('get', id)
+//   .then(data => console.log(data))
+//   .catch(e => console.log(e))
+
+
+// const newContact = {
+//   name: 'Vasa',
+//   email: 'vasa.prosto.diam@Donec.com',
+//   phone: '(097) 344-2335',
+// }
+
+// invokeAction('add', '', newContact)
+//   .then(data => console.log(data))
+//   .catch(e => console.log(e))
+
+// const updateContact = {
+//   name: 'Poly',
+//   email: 'poly.mango.diam@Donec.com',
+//   phone: '(097) 344-2335',
+// }
+//
+// const updateId = "B2bbIvMk6_TGsjmviamKU";
+//
+// invokeAction('update', updateId, updateContact)
+//   .then(data => console.log(data))
+//   .catch(e => console.log(e))
+
+// const id = "B2bbIvMk6_TGsjmviamKU";
+//
+// invokeAction('remove', id)
+//   .then(data => console.log(data))
+//   .catch(e => console.log(e))
+
+
+=========== contacts ==========
+const fs = require('fs/promises');
+const path = require('path');
+const {nanoid} = require('nanoid');
+// const contacts = require('./db/contacts.json') // імпортуємо контакти в json фарматі і node сама робе конвертацію
+
+const contactPath = path.resolve('./db/contacts.json')
+
+// const listContacts = async => contacts;
+
+const listContacts = async () => {
+  const data = await fs.readFile(contactPath,'utf-8');
+  return JSON.parse(data);
+};
+
+const getContactById = async (contactId) => {
+  const contactsList = await listContacts(); // отримуєм масив всіх контактів
+  const contact = contactsList.find(contact => contact.id.toString() === contactId)
+  if (!contact) throw Error('Error search')// викидуєм різні помилки щоб знати де сталася помилка
+
+  return contact
+}
+
+const addContact = async (name, email, phone) => {
+  const contactsList = await listContacts();
+  const newContact = {name, email, phone, id: nanoid()}
+  contactsList.push(newContact)
+  await fs.writeFile(contactPath, JSON.stringify(contactsList)) // перезаписуєм файл contacts.json новими даними
+
+  return newContact;
+}
+
+const removeContact = async (contactId) => {
+  const contactsList = await listContacts()
+  const filterContactsList =  contactsList.filter(contact => contact.id.toString() !== contactId);// приводимо id з contacts.json в строку
+  if (contactsList.length === filterContactsList.length) throw Error('Error remove')
+
+  await updateContacts(filterContactsList)
+
+  return 'Success remove'
+}
+
+// const updateContactById = async (id, data) => {
+//   const contactsList = await listContacts();
+//   const idx = contactsList.findIndex(contact => contact.id === id)
+//   if (idx === -1) return null;
+//
+//   const updateContact = {...contactsList[idx], ...data};
+//   contactsList[idx] = updateContact;  // масиві контактів по індексу, оновлюєм контакт
+//   await updateContacts(contactsList); // перезаписуємо contacts.json
+//
+//   return updateContact;
+// }
+
+// допоміжна ф-ція для оновлення contacts.json
+async function updateContacts(newContacts) {
+  await fs.writeFile(contactPath, JSON.stringify(newContacts));
+}
+
+module.exports = {
+  listContacts,
+  getContactById,
+  removeContact,
+  addContact,
+  // updateContactById,
+}
+
+
+// const removeContact = async (contactId) => {
+//   const contactsList = await listContacts()
+//   const idx = contactsList.findIndex(contact => contact.id.toString() === contactId);// приводимо id з contacts.json в строку
+//   if (idx === -1)  throw Error('Error remove')
+//
+//   contactsList.splice(idx, 1); // можем "мутувати" масив так як перезаписуєм файл
+//   await updateContacts(contactsList)
+//
+//   return 'Success remove'
+// }
